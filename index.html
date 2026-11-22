@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>KORTEX — редуксы для GTA в один клик</title>
+  <meta name="description" content="KORTEX — программа для Windows: каталог редуксов для GTA, установка в один клик с автобэкапом, «Вернуть оригинал», редактор скинов, трассеров, прицела, погоды и HUD, FPS-буст.">
+  <meta name="theme-color" content="#0d0e10">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KORTEX — редуксы для GTA в один клик">
+  <meta property="og:description" content="Каталог редуксов, установка с автобэкапом, свой редактор и FPS-буст. Для серверов на RAGE MP.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>
+    // Тема ставится до отрисовки, чтобы не мигало: сохранённый выбор, иначе — как в системе (по умолчанию тёмная).
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('naomi-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Orbitron:wght@900&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <!-- Иконки: свой набор, тонкий контур -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <radialGradient id="lg-bg" cx=".48" cy=".5" r=".75"><stop offset="0" stop-color="#202227"/><stop offset=".72" stop-color="#0f1013"/></radialGradient>
+      <radialGradient id="lg-halo"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="lg-a" x1="47" y1="50" x2="86" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#868c95"/><stop offset=".5" stop-color="#cfd3d8"/><stop offset="1" stop-color="#fff"/></linearGradient>
+      <linearGradient id="lg-b" x1="47" y1="50" x2="72" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8f959e"/><stop offset=".55" stop-color="#cdd1d6"/><stop offset="1" stop-color="#e6e8eb"/></linearGradient>
+      <linearGradient id="lg-r1" x1="49" y1="50.5" x2="21" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="lg-r2" x1="49" y1="50.5" x2="8" y2="81" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <radialGradient id="lg-glow"><stop offset="0" stop-color="#fff"/><stop offset=".22" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+      <filter id="lg-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation=".7"/></filter>
+      <symbol id="spark" viewBox="-10 -10 20 20"><path d="M0 -9.5 L1.6 -1.6 L9.5 0 L1.6 1.6 L0 9.5 L-1.6 1.6 L-9.5 0 L-1.6 -1.6 Z" fill="currentColor"/></symbol>
+      <symbol id="logo" viewBox="0 0 100 100"><rect x="1" y="1" width="98" height="98" rx="23" fill="url(#lg-bg)"/><rect x="1.5" y="1.5" width="97" height="97" rx="22.5" fill="none" stroke="#fff" stroke-opacity=".08"/><circle cx="50" cy="50" r="46" fill="url(#lg-halo)"/><g transform="translate(50 50) scale(.86) translate(-50 -50)"><g filter="url(#lg-soft)"><polygon points="51.6,48.5 21,19 47.2,52.4" fill="url(#lg-r1)"/><polygon points="47.6,48.1 8,81 51.2,52.9" fill="url(#lg-r2)"/></g><path d="M42.2 50.5 L77.3 20.5 L91.8 20.5 L56.7 50.5 Z" fill="url(#lg-a)"/><path d="M41.7 50.5 L57.2 50.5 L79.4 79.5 L63.9 79.5 Z" fill="url(#lg-b)"/><path d="M77.3 20.5 L91.8 20.5" stroke="#fff" stroke-width=".8" opacity=".9"/><g transform="translate(48.6 50.4) scale(1.1)"><circle r="15" fill="url(#lg-glow)"/><path d="M0 -9.5 L1.5 -1.5 L9.5 0 L1.5 1.5 L0 9.5 L-1.5 1.5 L-9.5 0 L-1.5 -1.5 Z" fill="#fff"/><path d="M0 -5 L.9 -.9 L5 0 L.9 .9 L0 5 L-.9 .9 L-5 0 L-.9 -.9 Z" fill="#fff" transform="rotate(45)"/></g></g></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41M15.95 12.65a4 4 0 0 0-5.93-4.13"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+      <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11 3l1.8 4.7 4.7 1.8-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z"/><path d="M19 14l.8 2.2 2.2.8-2.2.8L19 20l-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+      <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+      <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+      <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M3 21v-5h5"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+      <symbol id="i-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8M7 21v-7h10v7"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 1.5c.6 5.6 4.9 9.9 10.5 10.5-5.6.6-9.9 4.9-10.5 10.5C11.4 16.9 7.1 12.6 1.5 12 7.1 11.4 11.4 7.1 12 1.5z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+      <symbol id="i-tree" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M12 2 5.5 11H9l-4 6h14l-4-6h3.5z"/></symbol>
+      <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M20.4 6.6 16 4a4 4 0 0 1-8 0L3.6 6.6a1 1 0 0 0-.5 1.1l.6 3.2a1 1 0 0 0 1 .8H7v9a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-9h2.3a1 1 0 0 0 1-.8l.6-3.2a1 1 0 0 0-.5-1.1z"/></symbol>
+      <symbol id="i-car" viewBox="0 0 24 24"><path d="M3 16v-4.5L5.2 6h13.6L21 11.5V16"/><path d="M3 11.5h18"/><path d="M3 16h2m4 0h6m4 0h2"/><circle cx="7" cy="16.5" r="2"/><circle cx="17" cy="16.5" r="2"/></symbol>
+      <symbol id="i-hit" viewBox="0 0 24 24"><path d="M5 5l4 4M19 5l-4 4M5 19l4-4M19 19l-4-4"/></symbol>
+      <!-- Ствол: тот же контур, что в рисунках программы -->
+      <symbol id="gun" viewBox="0 0 260 120"><path d="M12 54 L52 52 L58 46 L72 46 L76 42 L176 42 L180 38 L194 38 L196 42 L232 42 L232 47 L248 47 L248 51 L232 51 L232 56 L180 56 L174 62 L152 62 L146 92 L131 92 L135 62 L120 62 L114 82 L100 86 L95 84 L101 62 L76 62 L58 68 L52 68 L20 82 L12 82 Z"/><path d="M84 42 V37 H168 V42" fill="none"/><path d="M101 62 Q106 73 120 68" fill="none"/><rect x="140" y="47" width="22" height="6" rx="1.5" fill="none"/></symbol>
+    </defs>
+  </svg>
+
+  <canvas class="topo" id="topo" aria-hidden="true"></canvas>
+  <div class="glow" aria-hidden="true"></div>
+
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="site-head" id="top">
+    <div class="wrap head-row">
+      <a class="brand" href="#top" aria-label="KORTEX — наверх">
+        <span class="brand-word"><span>KORTEX</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Разделы">
+        <a href="#features">Возможности</a>
+        <a href="#editor">Редактор</a>
+        <a href="#how">Как это работает</a>
+        <a href="#safe">Бэкапы</a>
+        <a href="#faq">Вопросы</a>
+      </nav>
+      <div class="head-act">
+        <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Сменить тему">
+          <svg class="ic ic-sun"><use href="#i-sun"/></svg><svg class="ic ic-moon"><use href="#i-moon"/></svg>
+        </button>
+        <a class="btn btn-primary btn-sm head-dl" href="https://github.com/bxq3/naomi/releases/latest/download/KORTEX-Setup.exe"><svg class="ic"><use href="#i-download"/></svg><span>Скачать</span></a>
+        <button class="icon-btn menu-btn" type="button" aria-controls="nav" aria-expanded="false" aria-label="Меню">
+          <svg class="ic ic-open"><use href="#i-menu"/></svg><svg class="ic ic-close"><use href="#i-x"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ Первый экран ============ -->
+    <section class="hero">
+      <div class="wrap hero-copy">
+        <h1 class="hero-title" data-reveal style="--d:80ms">
+          Редуксы для GTA<br><span class="metal">в&nbsp;один клик.</span>
+        </h1>
+        <p class="hero-lead" data-reveal style="--d:160ms">
+          KORTEX скачивает редукс, ставит его в игру и сам прячет оригиналы в бэкап. Не зашло — одна кнопка, и игра как была.
+          А в редакторе собираешь своё: скины оружия, трассеры, прицел, погоду и&nbsp;HUD.
+        </p>
+        <div class="hero-cta" data-reveal style="--d:240ms">
+          <a class="btn btn-primary btn-lg" href="https://github.com/bxq3/naomi/releases/latest/download/KORTEX-Setup.exe">
+            <svg class="ic"><use href="#i-download"/></svg>Скачать для Windows
+          </a>
+          <a class="btn btn-ghost btn-lg" href="#how">Как это работает<svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+        <p class="dl-meta" data-reveal style="--d:300ms"><span data-ver-meta>Последняя версия · Windows 10 и 11, 64-бит</span></p>
+        <p class="servers" data-reveal style="--d:360ms">Для серверов <b>GTA5RP</b><i></i><b>Majestic RP</b><i></i><b>Nova RP</b><i></i>и других на RAGE MP</p>
+      </div>
+
+      <div class="wrap shot-stage" data-reveal style="--d:420ms">
+        <div class="shot-tilt">
+          <div class="shot">
+            <!-- Макет окна программы: «Главная» -->
+            <div class="app-win" aria-hidden="true">
+              <div class="aw-top">
+                <span class="aw-brand"><span class="brand-word"><span>KORTEX</span></span></span>
+                <span class="aw-tabs">
+                  <span class="on"><svg class="ic"><use href="#i-home"/></svg>Главная</span>
+                  <span><svg class="ic"><use href="#i-grid"/></svg>Моды</span>
+                  <span><svg class="ic"><use href="#i-wrench"/></svg>Редактор</span>
+                  <span><svg class="ic"><use href="#i-gauge"/></svg>Оптимизация</span>
+                </span>
+                <span class="aw-right">
+                  <span class="aw-pill"><i class="dot"></i>GTA5RP</span>
+                  <span class="aw-ico"><svg class="ic"><use href="#i-shield"/></svg></span>
+                  <span class="aw-ico"><svg class="ic"><use href="#i-contrast"/></svg></span>
+                  <span class="aw-ico"><svg class="ic"><use href="#i-sliders"/></svg></span>
+                  <span class="aw-ava"><svg class="ic"><use href="#i-user"/></svg></span>
+                  <span class="aw-winbtns"><i></i><i></i><i></i></span>
+                </span>
+              </div>
+              <div class="aw-home">
+                <section class="aw-card aw-now">
+                  <div class="cv cv-graphite aw-now-cover"></div>
+                  <div class="aw-now-text">
+                    <span class="aw-eyebrow"><i class="dot pulse"></i>сейчас в игре</span>
+                    <b class="aw-h1">Graphite Redux</b>
+                    <span class="aw-addons"><span><b>+ Звуки</b>Тихие выстрелы</span><span><b>+ Прицел</b>Точка</span></span>
+                    <span class="aw-muted">Поставлен 22 нояб., 14:08 · 1 248 файлов · оригиналы в бэкапе</span>
+                    <span class="aw-btns"><span class="aw-btn primary"><svg class="ic"><use href="#i-wrench"/></svg>Доработать</span><span class="aw-btn"><svg class="ic"><use href="#i-undo"/></svg>Вернуть оригинал</span></span>
+                  </div>
+                  <div class="aw-now-foot"><span><b>12</b>моих модов</span><span><b>86</b>в каталоге</span><span><b>1 284</b>файла в бэкапе</span></div>
+                </section>
+                <section class="aw-card aw-make">
+                  <div class="aw-make-head"><b>Сделать своё</b><span class="aw-muted">поверх того, что стоит, или с чистой игры</span></div>
+                  <div class="aw-make-cols">
+                    <span><svg class="aw-art" viewBox="0 0 260 120"><use href="#gun"/></svg><b>Оружие</b><small>Своя картинка на любой ствол, 3D-превью сразу.</small></span>
+                    <span><svg class="aw-art" viewBox="0 0 260 120"><path d="M14 96 L246 26" class="acc"/><path d="M14 108 L190 56" opacity=".5"/><path d="M60 110 L250 52" opacity=".35"/><circle cx="246" cy="26" r="5" class="acc"/></svg><b>Трассеры</b><small>Цвет, свечение и толщина следа пули.</small></span>
+                    <span><svg class="aw-art" viewBox="0 0 260 120"><circle cx="96" cy="50" r="22" class="acc"/><path d="M96 14v8M96 78v8M60 50h8M124 50h8M71 25l6 6M115 69l6 6M71 75l6-6M115 31l6-6" class="acc"/><path d="M120 100h86a20 20 0 0 0 0-40 30 30 0 0 0-56-4 22 22 0 0 0-30 44z"/></svg><b>Погода</b><small>Небо, облака и цветокоррекция картинки.</small></span>
+                  </div>
+                </section>
+                <aside class="aw-card aw-side">
+                  <div class="aw-side-head"><b>Новое</b><span>Все<svg class="ic"><use href="#i-arrow"/></svg></span></div>
+                  <div class="aw-list">
+                    <span><i class="cv cv-graphite"></i><span><b>Graphite Redux</b><small>Редукс · 1,4 ГБ</small></span><em class="live">в игре</em></span>
+                    <span><i class="cv cv-cold"></i><span><b>Cold Morning</b><small>Таймцикл · 86 МБ</small></span><svg class="ic"><use href="#i-arrow"/></svg></span>
+                    <span><i class="cv cv-gun"></i><span><b>Silver Line GP</b><small>Оружие · 29 МБ</small></span><svg class="ic"><use href="#i-arrow"/></svg></span>
+                    <span><i class="cv cv-night"></i><span><b>Night Drive</b><small>Редукс · 2,1 ГБ</small></span><svg class="ic"><use href="#i-arrow"/></svg></span>
+                    <span><i class="cv cv-dusk"></i><span><b>Amber Hour</b><small>Редукс · 1,1 ГБ</small></span><svg class="ic"><use href="#i-arrow"/></svg></span>
+                  </div>
+                  <div class="aw-quick"><span><svg class="ic"><use href="#i-gauge"/></svg>FPS-буст</span><span><svg class="ic"><use href="#i-shield"/></svg>Бэкапы</span><span><svg class="ic"><use href="#i-upload"/></svg>Добавить</span></div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="float-chip fc-1" aria-hidden="true"><svg class="ic"><use href="#i-shield"/></svg><span><b>Бэкап готов</b><small>1 284 файла · мгновенно</small></span></div>
+        <div class="float-chip fc-2" aria-hidden="true"><svg class="ic"><use href="#i-gauge"/></svg><span><b>FPS-буст</b><small>пресет «FPS» · +25–40%</small></span></div>
+        <div class="float-chip fc-3" aria-hidden="true"><svg class="ic"><use href="#i-refresh"/></svg><span><b>Обновление скачано</b><small>поставится само</small></span></div>
+      </div>
+    </section>
+
+    <!-- ============ Цифры ============ -->
+    <section class="stats" aria-label="Коротко в цифрах">
+      <div class="wrap stats-row">
+        <div class="stat" data-reveal><b><span data-count="1">1</span> клик</b><span>поставить редукс или вернуть оригинал</span></div>
+        <div class="stat" data-reveal style="--d:60ms"><b>~<span data-count="570">570</span></b><span>модификаторов таймцикла в редакторе</span></div>
+        <div class="stat" data-reveal style="--d:120ms"><b><span data-count="235">235</span></b><span>цветов интерфейса HUD</span></div>
+        <div class="stat" data-reveal style="--d:180ms"><b><span data-count="32">32</span></b><span>словаря дорог — асфальт и разметка</span></div>
+        <div class="stat" data-reveal style="--d:240ms"><b><span data-count="2048">2048</span>&nbsp;px</b><span>скины оружия в полном размере</span></div>
+      </div>
+    </section>
+
+    <!-- ============ Возможности ============ -->
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="kicker">Возможности</span>
+          <h2>Всё для графики —<br><span class="metal">в одной программе</span></h2>
+          <p>Каталог, установка, бэкапы, редактор и оптимизация. Без OpenIV, без ручного копирования и без страха сломать игру.</p>
+        </div>
+
+        <div class="bento">
+          <article class="card c-catalog" data-reveal>
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-grid"/></svg></span><h3>Каталог редуксов</h3></div>
+            <p>Редуксы подбирает команда KORTEX. В карточке — автор, размер и серверы, для которых он сделан. Жмёшь «Скачать и поставить» — остальное программа делает сама.</p>
+            <div class="cat-filters" aria-hidden="true"><span class="on">Все моды</span><span>Редуксы</span><span>Таймциклы</span><span>Оружие</span><span>Трассеры</span><span>HUD</span><span>Звуки</span></div>
+            <div class="cat-grid" aria-hidden="true">
+              <div class="mc"><div class="cv cv-graphite"></div><div class="mc-body"><b>Graphite Redux</b><small>автор: frost · 1,4 ГБ</small><span class="tags"><i>GTA5RP</i><i>Majestic</i></span></div></div>
+              <div class="mc"><div class="cv cv-cold"></div><div class="mc-body"><b>Cold Morning</b><small>автор: nordlys · 86 МБ</small><span class="tags"><i>Nova RP</i></span></div></div>
+              <div class="mc"><div class="cv cv-night"></div><div class="mc-body"><b>Night Drive</b><small>автор: k1rra · 2,1 ГБ</small><span class="tags"><i>GTA5RP</i><i>Nova RP</i></span></div></div>
+            </div>
+            <ul class="mini-list"><li>Загрузка частями, с докачкой при обрыве</li><li>Проверка по контрольной сумме</li><li>Фильтры по типу и серверу</li></ul>
+          </article>
+
+          <article class="card c-install" data-reveal style="--d:80ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-play"/></svg></span><h3>Установка в один клик</h3></div>
+            <p>Перед установкой оригиналы уходят в бэкап. Упало на середине — всё откатится само.</p>
+            <ul class="inst-steps" aria-label="Что делает программа">
+              <li><svg class="ic"><use href="#i-check"/></svg>Находит папку игры</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Проверяет загрузку по контрольной сумме</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Убирает из архива .asi, .dll, .exe</li>
+              <li><svg class="ic"><use href="#i-check"/></svg>Сохраняет оригиналы и ставит файлы</li>
+            </ul>
+            <div class="inst" aria-hidden="true">
+              <div class="inst-head"><span class="spin"></span><b>Ставлю «Graphite Redux»</b></div>
+              <div class="inst-labels"><span>Бэкап оригиналов…</span><span>update.rpf › common › data…</span><span class="ok"><svg class="ic"><use href="#i-check"/></svg>Готово · оригиналы в бэкапе</span></div>
+              <div class="bar"><i></i></div>
+            </div>
+          </article>
+
+          <article class="card c-restore" data-reveal>
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-undo"/></svg></span><h3>«Вернуть оригинал»</h3></div>
+            <p>Одна кнопка — и игра как до установки. Если игра успела обновить файл, старый бэкап его не затрёт.</p>
+            <div class="restore" aria-hidden="true">
+              <span class="rs-state"><i class="dot"></i>С редуксом</span>
+              <span class="rs-btn"><svg class="ic"><use href="#i-undo"/></svg>Вернуть оригинал</span>
+              <span class="rs-state ok"><svg class="ic"><use href="#i-check"/></svg>Оригинал</span>
+            </div>
+          </article>
+
+          <article class="card c-layers" data-reveal style="--d:60ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-layers"/></svg></span><h3>Моды поверх редукса</h3></div>
+            <p>Звуки, оружие, броня — встают поверх редукса. У каждого свой бэкап: снимай по одному.</p>
+            <div class="stack" aria-hidden="true">
+              <span style="--i:2"><b>+ Оружие</b>Silver Line GP</span>
+              <span style="--i:1"><b>+ Звуки</b>Тихие выстрелы</span>
+              <span style="--i:0"><b>Редукс</b>Graphite Redux</span>
+            </div>
+          </article>
+
+          <article class="card c-drop" data-reveal style="--d:120ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-upload"/></svg></span><h3>Свои редуксы</h3></div>
+            <p>Перетащи архив или папку. Папку <code>mods</code> программа перенесёт в корень — RAGE MP её не читает. <code>.asi</code>, <code>.dll</code> и <code>.exe</code>, за которые банят на RP, — отбрасываются.</p>
+            <div class="drop" aria-hidden="true">
+              <span class="drop-file"><svg class="ic"><use href="#i-file"/></svg>my-redux.7z</span>
+              <span class="exts"><i>.zip</i><i>.7z</i><i>.rar</i><i>.oiv</i><i>.kortex</i><i class="no">.asi</i><i class="no">.dll</i></span>
+            </div>
+          </article>
+
+          <article class="card c-rpf" data-reveal>
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-box"/></svg></span><h3>Прямо внутрь .rpf</h3></div>
+            <p>Как в OpenIV, только сам: файлы ставятся внутрь архивов, даже во вложенные <code>dlc.rpf</code>. Архив остаётся в родном шифровании — OpenIV.asi игре не нужен.</p>
+            <pre class="tree" aria-hidden="true"><span>update/</span>
+<span>└ update.rpf</span>
+<span>  └ common/data/<b>timecycle</b></span>
+<span>x64g.rpf</span>
+<span>└ levels/gta5/<b>gtxd.rpf</b> <em>1,9 ГБ — на месте</em></span></pre>
+          </article>
+
+          <article class="card c-boost" data-reveal style="--d:80ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-gauge"/></svg></span><h3>FPS-буст</h3></div>
+            <p>Пресет графики, мощная видеокарта для GTA5.exe, схема «Высокая производительность», игровой режим, высокий приоритет. Откат — одной кнопкой.</p>
+            <div class="boost" aria-hidden="true">
+              <div class="boost-dial"><svg viewBox="0 0 120 120"><circle class="bd-track" cx="60" cy="60" r="48"/><circle class="bd-val" cx="60" cy="60" r="48" pathLength="100"/></svg><b>BOOST</b></div>
+              <div class="boost-presets">
+                <span><b>Баланс</b><em>+10–20%</em><small>картинка почти не меняется</small></span>
+                <span class="on"><b>FPS</b><em>+25–40%</em><small>лучший выбор для RP</small></span>
+                <span><b>Максимум</b><em>+40–70%</em><small>для слабых ПК</small></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card c-update" data-reveal>
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-refresh"/></svg></span><h3>Обновляется сам</h3></div>
+            <p>Проверка каждые 15 минут. Новая версия скачивается фоном и ставится, когда закроешь программу.</p>
+            <div class="upd" aria-hidden="true"><span class="upd-ring"><svg class="ic"><use href="#i-refresh"/></svg></span><span><b data-ver-short>Новая версия</b><small>поставится при закрытии</small></span></div>
+          </article>
+
+          <article class="card c-theme" data-reveal style="--d:60ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-contrast"/></svg></span><h3>Тёмная и светлая</h3></div>
+            <p>Графитовая тёмная, чистая светлая или как в Windows — переключается в верхней панели.</p>
+            <div class="themes" aria-hidden="true"><span class="th-d"><i></i><i></i><i></i></span><span class="th-l"><i></i><i></i><i></i></span></div>
+          </article>
+
+          <article class="card c-account" data-reveal style="--d:120ms">
+            <div class="card-top"><span class="card-ic"><svg class="ic"><use href="#i-user"/></svg></span><h3>Аккаунт</h3></div>
+            <p>Регистрация по почте с кодом из письма, пароль можно сбросить. Профиль — в верхней панели программы.</p>
+            <div class="acc" aria-hidden="true"><span class="acc-ava"><svg class="ic"><use href="#i-user"/></svg></span><span class="acc-lines"><i></i><i></i></span><span class="acc-code"><i>4</i><i>8</i><i>1</i><i>5</i><i>9</i><i>2</i></span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Ленты: категории каталога и коротко о программе ============ -->
+    <div class="tapes" aria-label="Что есть в каталоге">
+      <div class="tape tape-a" data-dir="-1">
+        <div class="tape-track">
+          <span class="tape-set">
+            <span class="tp"><svg class="ic"><use href="#i-layers"/></svg>Редуксы</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-cloud"/></svg>Таймциклы и погода</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-crosshair"/></svg>Скины оружия</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-zap"/></svg>Трассеры</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-target"/></svg>Прицелы</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-sparkles"/></svg>Кровь и эффекты</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-sound"/></svg>Звуки</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-radar"/></svg>HUD и радар</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-map"/></svg>Карта</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-route"/></svg>Дороги</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-tree"/></svg>Природа</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-image"/></svg>Загрузочные экраны</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-shield"/></svg>Броня</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-shirt"/></svg>Одежда</span><svg class="tp-star"><use href="#i-star"/></svg>
+            <span class="tp"><svg class="ic"><use href="#i-car"/></svg>Транспорт</span><svg class="tp-star"><use href="#i-star"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="tape tape-b" data-dir="1" aria-hidden="true">
+        <div class="tape-track">
+          <span class="tape-set">
+            <span class="tp">Автобэкап</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp hl">Вернуть оригинал</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp">Без OpenIV</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp hl">GTA5RP</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp">Установка в один клик</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp hl">Majestic RP</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp">FPS-буст</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp hl">Nova RP</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp">Свой редукс из частей</span><svg class="tp-logo"><use href="#spark"/></svg>
+            <span class="tp">Обновляется сам</span><svg class="tp-logo"><use href="#spark"/></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ Редактор ============ -->
+    <section class="section" id="editor">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="kicker">Редактор</span>
+          <h2>Собери свой редукс.<br><span class="metal">Без OpenIV и без кода.</span></h2>
+          <p>Доработай то, что стоит в игре, начни с чистой игры или собери из частей разных редуксов. Попробуй прямо здесь — переключай разделы и пресеты.</p>
+        </div>
+
+        <div class="ed" data-reveal>
+          <aside class="ed-side">
+            <div class="ed-proj"><span class="ed-proj-ic">GR</span><span><b>Graphite Redux — моя версия</b><small><i class="dot warn"></i>не сохранено</small></span></div>
+            <div class="ed-tabs" role="tablist" aria-label="Разделы редактора" aria-orientation="vertical">
+              <button role="tab" id="t-gun" aria-controls="p-gun" aria-selected="true"><svg class="ic"><use href="#i-crosshair"/></svg><span><b>Оружие</b><small>скины и 3D-превью</small></span></button>
+              <button role="tab" id="t-trc" aria-controls="p-trc" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-zap"/></svg><span><b>Трассеры</b><small>цвет, свечение, толщина</small></span></button>
+              <button role="tab" id="t-wx" aria-controls="p-wx" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-cloud"/></svg><span><b>Погода</b><small>небо, облака, цвет</small></span></button>
+              <button role="tab" id="t-xh" aria-controls="p-xh" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-target"/></svg><span><b>Прицел</b><small>форма, цвет</small></span></button>
+              <button role="tab" id="t-fx" aria-controls="p-fx" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-sparkles"/></svg><span><b>Эффекты экрана</b><small>блюр, линза, шум</small></span></button>
+              <button role="tab" id="t-map" aria-controls="p-map" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-map"/></svg><span><b>Карта и миникарта</b><small>меню паузы и радар</small></span></button>
+              <button role="tab" id="t-road" aria-controls="p-road" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-route"/></svg><span><b>Дороги</b><small>асфальт и разметка</small></span></button>
+              <button role="tab" id="t-hud" aria-controls="p-hud" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-radar"/></svg><span><b>Радар и HUD</b><small>картинки и цвета</small></span></button>
+              <button role="tab" id="t-tex" aria-controls="p-tex" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-image"/></svg><span><b>Текстуры</b><small>любая текстура игры</small></span></button>
+              <button role="tab" id="t-comp" aria-controls="p-comp" aria-selected="false" tabindex="-1"><svg class="ic"><use href="#i-layers"/></svg><span><b>Состав и файлы</b><small>части и свои файлы</small></span></button>
+            </div>
+            <div class="ed-side-foot">
+              <span class="btn btn-primary btn-block"><svg class="ic"><use href="#i-play"/></svg>Поставить в игру</span>
+              <span class="btn btn-ghost btn-block"><svg class="ic"><use href="#i-save"/></svg>Сохранить</span>
+            </div>
+          </aside>
+
+          <div class="ed-main">
+            <!-- Оружие -->
+            <div class="ed-panel" role="tabpanel" id="p-gun" aria-labelledby="t-gun">
+              <div class="stage st-gun">
+                <span class="stage-tag"><i>3D</i>Автоматы · Особый карабин</span>
+                <svg class="gun3d" viewBox="0 0 260 130" aria-hidden="true">
+                  <defs>
+                    <pattern id="pt-carbon" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#1a1b1e"/><rect width="3" height="3" fill="#2d2f34"/><rect x="3" y="3" width="3" height="3" fill="#2d2f34"/></pattern>
+                    <pattern id="pt-camo" width="48" height="40" patternUnits="userSpaceOnUse"><rect width="48" height="40" fill="#6e7058"/><path d="M0 8c8-6 16 2 22-2s10 8 4 12-18 2-26-2z" fill="#4a4d3b"/><path d="M26 22c6-4 14-2 18 4s-4 10-10 8-12-6-8-12z" fill="#2f3128"/><path d="M4 26c4-2 10 0 10 6s-8 6-12 2 0-6 2-8z" fill="#9a9475"/><path d="M30 2c4 0 10 2 8 6s-8 2-10-2z" fill="#9a9475"/></pattern>
+                    <pattern id="pt-digital" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#8b9099"/><rect width="4" height="4" fill="#5a5f68"/><rect x="4" y="4" width="4" height="4" fill="#3b3f46"/><rect x="8" width="4" height="8" fill="#a9adb4"/><rect x="12" y="8" width="4" height="4" fill="#5a5f68"/><rect y="12" width="8" height="4" fill="#3b3f46"/><rect x="8" y="12" width="4" height="4" fill="#c8cbd0"/></pattern>
+                    <pattern id="pt-tiger" width="30" height="40" patternUnits="userSpaceOnUse"><rect width="30" height="40" fill="#d98a2b"/><path d="M0 4c8 2 14 8 16 14-6-2-12-6-16-6zM30 14c-6 2-10 8-10 16 4-4 8-6 10-6zM6 28c6 0 10 4 12 10-5-1-9-4-12-4z" fill="#141414"/></pattern>
+                    <pattern id="pt-hex" width="14" height="24" patternUnits="userSpaceOnUse"><rect width="14" height="24" fill="#222428"/><path d="M7 0l7 4v8l-7 4-7-4V4zM0 16l0 8M14 16v8" fill="none" stroke="#9aa0a8" stroke-width="1"/></pattern>
+                    <linearGradient id="pt-chrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfbfc"/><stop offset=".35" stop-color="#9da2aa"/><stop offset=".5" stop-color="#4b4f56"/><stop offset=".62" stop-color="#d7dade"/><stop offset="1" stop-color="#6a6e76"/></linearGradient>
+                    <linearGradient id="pt-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2f3f5"/><stop offset="1" stop-color="#2a2c31"/></linearGradient>
+                  </defs>
+                  <g class="gun-body">
+                    <path class="gun-fill" fill="url(#pt-carbon)" d="M12 54 L52 52 L58 46 L72 46 L76 42 L176 42 L180 38 L194 38 L196 42 L232 42 L232 47 L248 47 L248 51 L232 51 L232 56 L180 56 L174 62 L152 62 L146 92 L131 92 L135 62 L120 62 L114 82 L100 86 L95 84 L101 62 L76 62 L58 68 L52 68 L20 82 L12 82 Z"/>
+                    <path class="gun-line" d="M84 42 V37 H168 V42 M101 62 Q106 73 120 68 M186 47 H226 M186 51 H226"/>
+                    <rect class="gun-line" x="140" y="47" width="22" height="6" rx="1.5"/>
+                    <path class="gun-shine" d="M60 47 L176 44"/>
+                  </g>
+                </svg>
+                <span class="stage-hint">клик по детали — выбрать слой · крути мышью · двойной клик — вид сбоку</span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Узор на корпус</span>
+                <div class="chips" data-group="gun">
+                  <button type="button" data-v="carbon" aria-pressed="true"><i class="sw" style="background:repeating-conic-gradient(#2d2f34 0 25%,#1a1b1e 0 50%) 0 0/8px 8px"></i>Карбон</button>
+                  <button type="button" data-v="camo" aria-pressed="false"><i class="sw" style="background:#6e7058"></i>Камуфляж</button>
+                  <button type="button" data-v="digital" aria-pressed="false"><i class="sw" style="background:#8b9099"></i>Цифровой</button>
+                  <button type="button" data-v="tiger" aria-pressed="false"><i class="sw" style="background:#d98a2b"></i>Тигр</button>
+                  <button type="button" data-v="hex" aria-pressed="false"><i class="sw" style="background:#222428;box-shadow:inset 0 0 0 1px #9aa0a8"></i>Соты</button>
+                  <button type="button" data-v="chrome" aria-pressed="false"><i class="sw" style="background:linear-gradient(#fbfbfc,#4b4f56,#d7dade)"></i>Хром</button>
+                  <button type="button" data-v="grad" aria-pressed="false"><i class="sw" style="background:linear-gradient(90deg,#f2f3f5,#2a2c31)"></i>Градиент</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Оружие</b><p>Все стволы игры и настоящая 3D-модель. Слои по деталям: винилы и картинки, узоры, текст, заливка, цветокоррекция, скрытие детали. Скин собирается до 2048&nbsp;px, обычная и детальная версии меняются вместе.</p></div>
+            </div>
+
+            <!-- Трассеры -->
+            <div class="ed-panel" role="tabpanel" id="p-trc" aria-labelledby="t-trc" hidden>
+              <div class="stage st-trc" style="--tr:#ffb057">
+                <div class="scene night"><i class="sc-city far"></i><i class="sc-city"></i><i class="sc-ground"></i></div>
+                <i class="streak" style="--y:34%;--a:-7deg;--dl:0s"></i>
+                <i class="streak" style="--y:46%;--a:-4deg;--dl:.45s"></i>
+                <i class="streak" style="--y:28%;--a:-10deg;--dl:.9s"></i>
+                <i class="streak" style="--y:52%;--a:-2deg;--dl:1.3s"></i>
+                <span class="stage-tag trc-name">Как в игре</span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Цвет</span>
+                <div class="chips" data-group="trc">
+                  <button type="button" data-v="#ffb057" data-name="Как в игре" aria-pressed="true"><i class="sw" style="background:#ffb057"></i>Как в игре</button>
+                  <button type="button" data-v="#ff3b3b" data-name="Лазер" aria-pressed="false"><i class="sw" style="background:#ff3b3b"></i>Лазер</button>
+                  <button type="button" data-v="#ff4fd8" data-name="Неон" aria-pressed="false"><i class="sw" style="background:#ff4fd8"></i>Неон</button>
+                  <button type="button" data-v="#4aa3ff" data-name="Плазма" aria-pressed="false"><i class="sw" style="background:#4aa3ff"></i>Плазма</button>
+                  <button type="button" data-v="#45e06b" data-name="Токсик" aria-pressed="false"><i class="sw" style="background:#45e06b"></i>Токсик</button>
+                  <button type="button" data-v="#e8eaee" data-name="Серебро" aria-pressed="false"><i class="sw" style="background:#e8eaee"></i>Серебро</button>
+                  <button type="button" data-v="none" data-name="Трассеров не будет" aria-pressed="false"><i class="sw sw-none"></i>Без трассеров</button>
+                </div>
+                <div class="ranges">
+                  <label><span>Толщина</span><input type="range" min="1" max="6" step="0.5" value="2.5" data-var="--th" data-unit="px"></label>
+                  <label><span>Свечение вокруг</span><input type="range" min="0" max="28" step="1" value="12" data-var="--glow" data-unit="px"></label>
+                </div>
+              </div>
+              <div class="ed-note"><b>Трассеры и попадания</b><p>Цвет трассеров, вспышки выстрела, крови и искр, белое ядро, толщина и затухание концов. Превью — сцена со стрельбой.</p></div>
+            </div>
+
+            <!-- Погода -->
+            <div class="ed-panel" role="tabpanel" id="p-wx" aria-labelledby="t-wx" hidden>
+              <div class="stage st-wx" data-time="day">
+                <div class="wx-sky"></div>
+                <i class="wx-stars"></i>
+                <i class="wx-sun"></i>
+                <i class="wx-cloud c1"></i><i class="wx-cloud c2"></i><i class="wx-cloud c3"></i>
+                <div class="scene wx-scene"><i class="sc-city far"></i><i class="sc-city"></i><i class="sc-ground"></i></div>
+                <i class="wx-haze"></i>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Время и погода</span>
+                <div class="chips" data-group="set" data-key="time">
+                  <button type="button" data-v="morning" aria-pressed="false">Утро</button>
+                  <button type="button" data-v="day" aria-pressed="true">День</button>
+                  <button type="button" data-v="sunset" aria-pressed="false">Закат</button>
+                  <button type="button" data-v="night" aria-pressed="false">Ночь</button>
+                  <button type="button" data-v="fog" aria-pressed="false">Туман</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Погода и таймцикл</b><p>Небо, облака и цветокоррекция картинки по времени суток. Правки считаются поверх выбранной основы — в файлах меняются только затронутые строки.</p></div>
+            </div>
+
+            <!-- Прицел -->
+            <div class="ed-panel" role="tabpanel" id="p-xh" aria-labelledby="t-xh" hidden>
+              <div class="stage st-xh" tabindex="0" aria-label="Превью прицела, нажми — хитмаркер">
+                <div class="scene dusk soft"><i class="sc-city far"></i><i class="sc-city"></i><i class="sc-ground"></i></div>
+                <svg class="xh" viewBox="56 56 88 88" aria-hidden="true"></svg>
+                <span class="stage-hint">нажми на превью — хитмаркер</span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Форма</span>
+                <div class="chips" data-group="xh-shape">
+                  <button type="button" data-v="dot" aria-pressed="false">Точка</button>
+                  <button type="button" data-v="cross" aria-pressed="false">Крест</button>
+                  <button type="button" data-v="crossdot" aria-pressed="true">Крест с точкой</button>
+                  <button type="button" data-v="circle" aria-pressed="false">Круг</button>
+                  <button type="button" data-v="t" aria-pressed="false">T</button>
+                  <button type="button" data-v="x" aria-pressed="false">X</button>
+                </div>
+                <div class="chips sw-row" data-group="xh-color" aria-label="Цвет прицела">
+                  <button type="button" class="sw-btn" data-v="#ffffff" aria-pressed="true" aria-label="Белый"><i style="background:#fff"></i></button>
+                  <button type="button" class="sw-btn" data-v="#4dff88" aria-pressed="false" aria-label="Зелёный"><i style="background:#4dff88"></i></button>
+                  <button type="button" class="sw-btn" data-v="#35e0ff" aria-pressed="false" aria-label="Голубой"><i style="background:#35e0ff"></i></button>
+                  <button type="button" class="sw-btn" data-v="#ffe14d" aria-pressed="false" aria-label="Жёлтый"><i style="background:#ffe14d"></i></button>
+                  <button type="button" class="sw-btn" data-v="#ff4d4d" aria-pressed="false" aria-label="Красный"><i style="background:#ff4d4d"></i></button>
+                  <button type="button" class="sw-btn" data-v="#ff5ce1" aria-pressed="false" aria-label="Розовый"><i style="background:#ff5ce1"></i></button>
+                </div>
+                <div class="ranges">
+                  <label><span>Зазор</span><input type="range" min="0" max="16" step="1" value="5" data-xh="gap"></label>
+                  <label><span>Длина</span><input type="range" min="4" max="30" step="1" value="12" data-xh="len"></label>
+                </div>
+              </div>
+              <div class="ed-note"><b>Прицел и хитмаркер</b><p>Точка, крест, круг, T, X или своя картинка. Цвет, обводка, толщина, длина, зазор. Хитмаркер — как в игре, свой цвет, своя картинка или выключить.</p></div>
+            </div>
+
+            <!-- Эффекты экрана -->
+            <div class="ed-panel" role="tabpanel" id="p-fx" aria-labelledby="t-fx" hidden>
+              <div class="stage st-fx blur vign noise lens">
+                <div class="fx-inner"><div class="scene day"><i class="sc-sun"></i><i class="sc-city far"></i><i class="sc-city"></i><i class="sc-ground"></i></div></div>
+                <i class="fx-vign"></i><i class="fx-noise"></i>
+                <span class="stage-tag fx-tag">Эффекты: <b>4 включено</b></span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Что оставить на экране</span>
+                <div class="chips" data-group="fx">
+                  <button type="button" data-v="blur" aria-pressed="true"><svg class="ic ck"><use href="#i-check"/></svg>Блюр экрана</button>
+                  <button type="button" data-v="vign" aria-pressed="true"><svg class="ic ck"><use href="#i-check"/></svg>Виньетка</button>
+                  <button type="button" data-v="noise" aria-pressed="true"><svg class="ic ck"><use href="#i-check"/></svg>Шум</button>
+                  <button type="button" data-v="lens" aria-pressed="true"><svg class="ic ck"><use href="#i-check"/></svg>Искажения линзы</button>
+                  <button type="button" class="chip-act" data-v="clear">Убрать всё</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Эффекты экрана</b><p>Пресеты в один клик: убрать блюр (уровень, меню, смерть), размытие в движении, линзу, шум и виньетку. Плюс ручная правка любого из ~570 модификаторов таймцикла.</p></div>
+            </div>
+
+            <!-- Карта -->
+            <div class="ed-panel" role="tabpanel" id="p-map" aria-labelledby="t-map" hidden>
+              <div class="stage st-map" data-style="game">
+                <div class="pm-head"><b>КАРТА</b><span>Задания</span><span>Статистика</span><span>Настройки</span></div>
+                <svg class="map" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <rect class="m-water" width="400" height="200"/>
+                  <path class="m-land" d="M118 20c34-14 78-10 104 8 18 12 22 30 40 38 24 10 52 4 70 22 16 16 10 40-6 54-20 18-50 20-70 34-18 13-34 24-60 22-30-2-44-22-66-30-24-9-52-4-66-24-12-18 0-38 4-58 4-26 26-56 50-66z"/>
+                  <path class="m-block" d="M180 92l26-6 10 22-26 8zM214 118l24-4 6 18-24 6zM160 126l22-2 4 18-22 4zM230 78l20-2 4 16-20 4z"/>
+                  <path class="m-road" d="M96 150C130 120 160 104 200 98s70-4 100 14M150 40c10 30 20 52 44 70s38 40 46 70M230 70c20 10 40 30 60 36"/>
+                  <path class="m-road thin" d="M120 92c30 4 50 12 70 26M250 150c-14-14-20-30-18-44M176 150c8-16 20-28 36-34"/>
+                  <g class="m-pin"><circle cx="262" cy="112" r="6"/><path d="M262 96v10"/></g>
+                </svg>
+                <div class="map-legend"><span><i class="lg-water"></i>Вода</span><span><i class="lg-land"></i>Суша</span><span><i class="lg-block"></i>Кварталы</span><span><i class="lg-road"></i>Дороги</span></div>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Стиль карты</span>
+                <div class="chips" data-group="set" data-key="style">
+                  <button type="button" data-v="game" aria-pressed="true">Как в игре</button>
+                  <button type="button" data-v="graphite" aria-pressed="false">Графит</button>
+                  <button type="button" data-v="night" aria-pressed="false">Ночь</button>
+                  <button type="button" data-v="paper" aria-pressed="false">Бумага</button>
+                  <button type="button" data-v="neon" aria-pressed="false">Неон</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Карта и миникарта</b><p>Меню паузы в макете. Карта собирается из всех частей, включая набор с прозрачным морем. Стили одним кликом, цвета зон, цветокоррекция, своя картинка поверх слоем.</p></div>
+            </div>
+
+            <!-- Дороги -->
+            <div class="ed-panel" role="tabpanel" id="p-road" aria-labelledby="t-road" hidden>
+              <div class="stage st-road" data-preset="game">
+                <div class="road-sky"></div>
+                <div class="road-3d"><div class="road-plane"><i class="rd-side l"></i><i class="rd-side r"></i><i class="rd-edge l"></i><i class="rd-edge r"></i><i class="rd-mid"></i><i class="rd-wet"></i></div></div>
+                <span class="stage-tag rd-tag">было / станет</span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Пресет</span>
+                <div class="chips" data-group="set" data-key="preset">
+                  <button type="button" data-v="game" aria-pressed="true">Как в игре</button>
+                  <button type="button" data-v="dark" aria-pressed="false">Тёмный</button>
+                  <button type="button" data-v="wet" aria-pressed="false">Мокрый</button>
+                  <button type="button" data-v="fresh" aria-pressed="false">Свежий асфальт</button>
+                  <button type="button" data-v="yellow" aria-pressed="false">Жёлтая разметка</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Дороги</b><p>Асфальт, разметка и, по галочке, тротуары во всех 32 словарях дорог: оттенок, насыщенность, яркость, контраст, окраска цветом. Карты нормалей и бликов не трогаются.</p></div>
+            </div>
+
+            <!-- Радар и HUD -->
+            <div class="ed-panel" role="tabpanel" id="p-hud" aria-labelledby="t-hud" hidden>
+              <div class="stage st-hud" data-hud="game">
+                <div class="scene night soft"><i class="sc-city far"></i><i class="sc-city"></i><i class="sc-ground"></i></div>
+                <div class="radar">
+                  <div class="radar-map">
+                    <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect class="r-bg" width="160" height="100"/><path class="r-road" d="M0 70C40 60 70 40 160 44M60 0c4 30 10 60 30 100M110 0c-8 30-6 60 10 100"/><path class="r-route" d="M80 52C92 46 100 40 112 30"/><circle class="r-way" cx="112" cy="30" r="4"/></svg>
+                    <i class="radar-me"></i>
+                    <i class="radar-hit"></i>
+                  </div>
+                  <div class="radar-bars"><i class="hp"></i><i class="ar"></i></div>
+                </div>
+                <button type="button" class="hit-btn"><svg class="ic"><use href="#i-hit"/></svg>Получить урон</button>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Цвета HUD</span>
+                <div class="chips" data-group="set" data-key="hud">
+                  <button type="button" data-v="game" aria-pressed="true">Как в игре</button>
+                  <button type="button" data-v="neon" aria-pressed="false">Неон</button>
+                  <button type="button" data-v="mono" aria-pressed="false">Минимал</button>
+                  <button type="button" data-v="gold" aria-pressed="false">Золото</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Радар и HUD</b><p>Картинки в миникарте: «При уроне», полоски здоровья и брони, фоны — своя картинка встаёт во все кадры ролика. Плюс все ~235 цветов интерфейса: радар, метки, маршрут, меню.</p></div>
+            </div>
+
+            <!-- Текстуры -->
+            <div class="ed-panel" role="tabpanel" id="p-tex" aria-labelledby="t-tex" hidden>
+              <div class="stage st-tex">
+                <div class="tex-search"><svg class="ic"><use href="#i-search"/></svg><span>hud_reticle</span><em>3 словаря · во всех архивах</em></div>
+                <div class="tex-grid" data-group="tex">
+                  <button type="button" class="tx t1" aria-pressed="false"><small>512×512 · DXT5</small></button>
+                  <button type="button" class="tx t2" aria-pressed="true"><small>256×256 · DXT5</small></button>
+                  <button type="button" class="tx t3" aria-pressed="false"><small>128×128 · BC4</small></button>
+                  <button type="button" class="tx t4" aria-pressed="false"><small>512×256 · DXT1</small></button>
+                  <button type="button" class="tx t5" aria-pressed="false"><small>256×256 · DXT3</small></button>
+                  <button type="button" class="tx t6" aria-pressed="false"><small>1024×1024 · BC5</small></button>
+                </div>
+                <span class="tex-act"><svg class="ic"><use href="#i-upload"/></svg>Заменить картинкой</span>
+              </div>
+              <div class="ed-note"><b>Любая текстура игры</b><p>Поиск словарей <code>.ytd</code> по всем архивам, включая вложенные. Превью и замена своей картинкой (PNG, JPG, BMP). Размер, формат и мип-уровни остаются как у оригинала, остальные текстуры — байт в байт.</p></div>
+            </div>
+
+            <!-- Состав -->
+            <div class="ed-panel" role="tabpanel" id="p-comp" aria-labelledby="t-comp" hidden>
+              <div class="stage st-comp">
+                <span class="comp-title">С чего начнём?</span>
+                <ol class="comp-list" aria-live="polite"></ol>
+                <span class="comp-foot"><span><svg class="ic"><use href="#i-box"/></svg>Экспорт в .kortex</span><span><svg class="ic"><use href="#i-play"/></svg>Сохранить и поставить</span></span>
+              </div>
+              <div class="ed-ctrl">
+                <span class="ctrl-label">Старт</span>
+                <div class="chips" data-group="comp">
+                  <button type="button" data-v="game" aria-pressed="false">Доработать то, что в игре</button>
+                  <button type="button" data-v="clean" aria-pressed="false">С чистой игры</button>
+                  <button type="button" data-v="lib" aria-pressed="false">Редукс из библиотеки</button>
+                  <button type="button" data-v="parts" aria-pressed="true">Собрать из частей</button>
+                </div>
+              </div>
+              <div class="ed-note"><b>Состав и файлы</b><p>Графика из одного редукса, оружие из другого, звуки с диска. Всё, что сделано в разделах, копится в «Моих правках» — они всегда ставятся последними, поверх основы.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Как это работает ============ -->
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="sec-head center" data-reveal>
+          <span class="kicker">Как это работает</span>
+          <h2>Четыре шага.<br><span class="metal">Бэкап — сам.</span></h2>
+        </div>
+        <ol class="how">
+          <li class="how-step" data-reveal>
+            <span class="how-num">01</span>
+            <span class="how-ic"><svg class="ic"><use href="#i-download"/></svg></span>
+            <h3>Скачай</h3>
+            <p>Установщик для Windows. Права администратора нужны, потому что GTA обычно лежит в Program Files.</p>
+          </li>
+          <li class="how-step" data-reveal style="--d:90ms">
+            <span class="how-num">02</span>
+            <span class="how-ic"><svg class="ic"><use href="#i-mail"/></svg></span>
+            <h3>Войди</h3>
+            <p>Почта и пароль, код подтверждения придёт в письме. Папку игры программа найдёт сама.</p>
+          </li>
+          <li class="how-step" data-reveal style="--d:180ms">
+            <span class="how-num">03</span>
+            <span class="how-ic"><svg class="ic"><use href="#i-grid"/></svg></span>
+            <h3>Выбери редукс</h3>
+            <p>Каталог с авторами и фильтрами по серверам. Или перетащи свой архив в окно.</p>
+          </li>
+          <li class="how-step" data-reveal style="--d:270ms">
+            <span class="how-num">04</span>
+            <span class="how-ic"><svg class="ic"><use href="#i-play"/></svg></span>
+            <h3>Поставь в игру</h3>
+            <p>Один клик. Оригиналы сами уходят в бэкап — вернуть игру можно в любой момент.</p>
+          </li>
+        </ol>
+        <div class="how-backup" data-reveal>
+          <span class="hb-ic"><svg class="ic"><use href="#i-shield"/></svg></span>
+          <p><b>Автобэкап всегда включён.</b> Бэкап лежит на том же диске, что и игра, — поэтому делается мгновенно. Закрой игру и лаунчер перед установкой — и всё.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Бэкапы ============ -->
+    <section class="section" id="safe">
+      <div class="wrap safe">
+        <div class="safe-copy" data-reveal>
+          <span class="kicker">Бэкапы</span>
+          <h2>Игру всегда<br><span class="metal">можно вернуть</span></h2>
+          <p>KORTEX ничего не ставит вслепую. Каждая установка записана, у каждой — свой бэкап.</p>
+          <ul class="checks">
+            <li><svg class="ic"><use href="#i-check"/></svg>Оригиналы уходят в бэкап до установки, а не после</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>Из архивов .rpf в бэкап уходит только оглавление — десятки КБ, откат байт в байт</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>Сбой на середине — автоматический откат</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>Файлы, которые обновила сама игра, старым бэкапом не затираются</li>
+            <li><svg class="ic"><use href="#i-check"/></svg>FPS-буст тоже откатывается одной кнопкой</li>
+          </ul>
+        </div>
+        <div class="log card" data-reveal style="--d:120ms" aria-label="Пример журнала бэкапов">
+          <div class="log-head"><span><svg class="ic"><use href="#i-shield"/></svg><b>Бэкапы</b></span><span class="log-state">Игра: <b>Редукс + моды</b></span></div>
+          <ul class="log-list">
+            <li><span class="lg-ic"><svg class="ic"><use href="#i-download"/></svg></span><span><b>Установлен «Graphite Redux»</b><small>1 248 файлов · оригиналы в бэкапе</small></span><time>14:08</time></li>
+            <li><span class="lg-ic"><svg class="ic"><use href="#i-layers"/></svg></span><span><b>Поставлен поверх «Тихие выстрелы»</b><small>36 файлов · свой бэкап</small></span><time>14:11</time></li>
+            <li><span class="lg-ic"><svg class="ic"><use href="#i-zap"/></svg></span><span><b>Включён FPS-буст «FPS»</b><small>settings.xml — копия сделана</small></span><time>14:12</time></li>
+            <li class="dim"><span class="lg-ic"><svg class="ic"><use href="#i-undo"/></svg></span><span><b>Возвращён оригинал после «Amber Hour»</b><small>вчера · 2 файла не тронуто — их обновила игра</small></span><time>вчера</time></li>
+          </ul>
+          <div class="log-foot"><span class="btn btn-ghost btn-sm"><svg class="ic"><use href="#i-undo"/></svg>Вернуть оригинал</span><span class="muted">Папка бэкапов: на том же диске, что и игра</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Вопросы ============ -->
+    <section class="section" id="faq">
+      <div class="wrap faq-wrap">
+        <div class="sec-head" data-reveal>
+          <span class="kicker">Вопросы</span>
+          <h2>Частые <span class="metal">вопросы</span></h2>
+          <p>Не нашёл ответ — напиши в тот канал, где взял ссылку на программу.</p>
+        </div>
+        <div class="faq" data-reveal>
+          <details name="faq" open>
+            <summary>Нужен ли OpenIV?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Нет. KORTEX сам ставит файлы внутрь архивов <code>.rpf</code>, включая вложенные, и оставляет их в родном шифровании. Ставить OpenIV.asi не нужно.</p></div>
+          </details>
+          <details name="faq">
+            <summary>За это не забанят?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Программа ставит только файлы графики, звуков и интерфейса — то же, что редуксы ставят вручную. Файлы <code>.asi</code>, <code>.dll</code> и <code>.exe</code> из архивов она отбрасывает: за них на RP-серверах банят. Правила своего сервера всё равно проверь сам.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Как вернуть игру как было?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Кнопка «Вернуть оригинал» — на главной или в разделе «Бэкапы». Мод, поставленный поверх редукса, можно снять отдельно, не трогая остальное. Перед этим закрой игру и лаунчер.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Для каких серверов?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Для серверов на RAGE MP: GTA5RP, Majestic RP, Nova RP и других. В каталоге у редукса указано, для каких серверов он сделан. Файлы из папки <code>mods</code> программа кладёт прямо в игру — RAGE MP эту папку не читает.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Можно поставить свой редукс?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Да: <code>.zip</code>, <code>.7z</code>, <code>.rar</code>, <code>.oiv</code>, <code>.kortex</code> или просто папку — перетащи в окно. В пакетах <code>.oiv</code> поддерживаются команды add, archive и delete.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Зачем входить в аккаунт?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Вход нужен для работы программы. Регистрация по почте: придёт код, потом задаёшь пароль. Забыл пароль — сбросишь кодом из письма.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Как программа обновляется?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Сама. Каждые 15 минут KORTEX проверяет обновления, скачивает новую версию фоном и ставит её, когда закроешь программу. Можно обновить и вручную в настройках.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Windows ругается на установщик<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Если SmartScreen пишет «Windows защитил ваш компьютер», нажми «Подробнее» → «Выполнить в любом случае». Качай установщик только с этого сайта. Права администратора нужны, чтобы менять файлы игры в Program Files.</p></div>
+          </details>
+          <details name="faq">
+            <summary>Что нужно для работы?<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Windows 10 или 11 (64-бит) и установленная GTA V. Папку игры программа ищет сама, а если не нашла — укажешь её в настройках.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Финальный призыв ============ -->
+    <section class="section final">
+      <div class="wrap">
+        <div class="final-card" data-reveal>
+          <div class="final-logo"><svg width="88" height="88"><use href="#logo"/></svg></div>
+          <h2>Поставь первый редукс<br><span class="metal">за минуту</span></h2>
+          <p>Скачай KORTEX, войди — и выбирай. Оригиналы игры программа сохранит сама.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="https://github.com/bxq3/naomi/releases/latest/download/KORTEX-Setup.exe"><svg class="ic"><use href="#i-download"/></svg>Скачать для Windows</a>
+          </div>
+          <p class="dl-meta"><span data-ver-meta>Последняя версия · Windows 10 и 11, 64-бит</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-row">
+      <div class="foot-brand">
+        <a class="brand" href="#top"><span class="brand-word"><span>KORTEX</span></span></a>
+        <p>Менеджер редуксов для GTA: каталог, установка с автобэкапом, редактор и FPS-буст.</p>
+      </div>
+      <nav class="foot-nav" aria-label="Ссылки">
+        <div><b>Программа</b><a href="https://github.com/bxq3/naomi/releases/latest/download/KORTEX-Setup.exe">Скачать для Windows</a><a href="#editor">Редактор</a></div>
+        <div><b>Помощь</b><a href="#how">Как это работает</a><a href="#safe">Бэкапы</a><a href="#faq">Вопросы</a></div>
+      </nav>
+    </div>
+    <div class="wrap foot-legal">
+      <p>KORTEX — независимый проект, не связан с Rockstar Games, Take-Two Interactive и администрацией RP-серверов. Grand Theft Auto и GTA — товарные знаки их владельцев. Редуксы — работа их авторов.</p>
+      <p>© <span data-year>2026</span> KORTEX</p>
+    </div>
+  </footer>
+
+  <script src="assets/site.js" defer></script>
+</body>
+</html>
