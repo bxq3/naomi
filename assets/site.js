@@ -2,8 +2,8 @@
 (() => {
   'use strict';
 
-  const LATEST_JSON = 'https://github.com/bxq3/naomi/releases/latest/download/latest.json';
-  const LATEST_API = 'https://api.github.com/repos/bxq3/naomi/releases/latest';
+  const LATEST_JSON = 'https://github.com/kortexgg/launcher/releases/latest/download/latest.json';
+  const LATEST_API = 'https://api.github.com/repos/kortexgg/launcher/releases/latest';
 
   const root = document.documentElement;
   const $ = (s, el = document) => el.querySelector(s);
