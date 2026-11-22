@@ -908,3 +908,83 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border-radius
   .drop-file { opacity: 1 !important; transform: none !important; }
   .acc-code i { color: var(--text-hi) !important; }
 }
+
+/* ---------- Подсказка «браузер или Windows ругаются» ---------- */
+.dl-help-row { margin-top: 10px; }
+.dl-help { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 9px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background-color 0.25s, border-color 0.25s, color 0.25s, transform 0.25s var(--ease); }
+.dl-help .ic { width: 16px; height: 16px; color: var(--ok); }
+.dl-help:hover { background: var(--surface-2); border-color: rgb(var(--fg) / 0.22); color: var(--text-hi); transform: translateY(-1px); }
+.final-card .dl-help-row { display: flex; justify-content: center; }
+
+dialog.dlg { width: min(860px, calc(100vw - 32px)); max-width: none; max-height: none; padding: 0; border: 0; background: transparent; color: var(--text); overflow: visible; }
+dialog.dlg:focus, dialog.dlg:focus-visible, .dlg-card:focus, .dlg-card:focus-visible { outline: none; }
+dialog.dlg::backdrop { background: rgb(var(--deep) / 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+dialog.dlg[open] { animation: dlg-in 0.42s var(--ease); }
+dialog.dlg[open]::backdrop { animation: dlg-fade 0.3s ease; }
+@keyframes dlg-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+@keyframes dlg-fade { from { opacity: 0; } }
+.dlg-card { position: relative; max-height: calc(100dvh - 32px); overflow: auto; overscroll-behavior: contain; padding: clamp(22px, 4vw, 36px); border-radius: 26px; background: var(--solid); border: 1px solid var(--line-2); box-shadow: var(--shadow); }
+.dlg-card h3 { margin: 12px 0 10px; padding-right: 44px; font-size: clamp(22px, 3.2vw, 30px); line-height: 1.15; letter-spacing: -0.01em; }
+.dlg-lead { margin: 0; color: var(--text-2); max-width: 66ch; line-height: 1.55; }
+.dlg-lead b { color: var(--text-hi); }
+.dlg-x { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); cursor: pointer; transition: background-color 0.2s, color 0.2s, transform 0.3s var(--ease); }
+.dlg-x:hover { background: var(--surface-2); color: var(--text-hi); transform: rotate(90deg); }
+.dlg-x .ic { width: 18px; height: 18px; }
+
+.dlg-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 22px 0 4px; padding: 4px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); width: fit-content; max-width: 100%; }
+.dlg-tabs button { position: relative; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; transition: background-color 0.25s, color 0.25s, box-shadow 0.25s; }
+.dlg-tabs button:hover { color: var(--text); }
+.dlg-tabs button[aria-selected='true'] { background: var(--btn); color: var(--on-accent); box-shadow: inset 0 1px 0 var(--btn-rim), 0 6px 16px -8px rgb(0 0 0 / 0.5); }
+.dlg-tabs button.mine::after { content: 'у вас'; position: absolute; top: -9px; right: -4px; padding: 1px 6px; border-radius: 99px; background: var(--ok); color: var(--on-accent); font-size: 10px; font-weight: 800; letter-spacing: 0.02em; line-height: 1.5; }
+
+.dlg-steps { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.dlg-step { display: grid; grid-template-columns: 36px minmax(0, 1fr) minmax(0, 310px); gap: 16px; align-items: center; padding: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
+.dlg-step:last-child { grid-template-columns: 36px minmax(0, 1fr); }
+.dlg-n { width: 36px; height: 36px; display: grid; place-items: center; align-self: start; border-radius: 12px; background: var(--btn); color: var(--on-accent); font-weight: 800; box-shadow: inset 0 1px 0 var(--btn-rim); }
+.dlg-txt { align-self: start; padding-top: 7px; }
+.dlg-txt > b { display: block; font-size: 16px; color: var(--text-hi); margin-bottom: 6px; }
+.dlg-txt ul { margin: 0; padding-left: 18px; color: var(--text-2); line-height: 1.55; font-size: 14.5px; }
+.dlg-txt ul li + li { margin-top: 3px; }
+.dlg-txt ul b { color: var(--text-hi); }
+.dlg-txt small { display: block; margin-top: 8px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.dlg-txt small:empty { display: none; }
+.dlg-txt kbd { display: inline-block; min-width: 22px; padding: 0 6px; border-radius: 6px; border: 1px solid var(--line-2); border-bottom-width: 2px; background: var(--surface-2); font: 600 12px/1.6 var(--mono); color: var(--text); text-align: center; }
+.dlg-foot { margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* Макеты: окно загрузок и SmartScreen. Кнопку, которую жать, обводит мягкая пульсирующая рамка. */
+.mk { border-radius: 14px; font-size: 12.5px; user-select: none; }
+.mk-dl { padding: 10px; background: var(--bg-2); border: 1px solid var(--line-2); box-shadow: 0 16px 34px -18px rgb(0 0 0 / 0.6); }
+.mk-top { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 8px; color: var(--muted); font-weight: 650; }
+.mk-top .ic { width: 15px; height: 15px; }
+.mk-row { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 10px; background: var(--surface-2); }
+.mk-exe { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; background: rgb(var(--fg) / 0.08); font-size: 9.5px; font-weight: 800; color: var(--text-2); }
+.mk-name { min-width: 0; display: flex; flex-direction: column; gap: 2px; font-weight: 650; color: var(--text); }
+.mk-name small { color: var(--warn); font-weight: 600; font-size: 11.5px; }
+.mk-name small::before { content: '\26A0\FE0E  '; }
+.mk-seq { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.mk-seq i { font-style: normal; color: var(--muted); }
+.mk-chip { padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); font-weight: 650; white-space: nowrap; }
+.mk-chip.hot { background: var(--btn); color: var(--on-accent); border-color: transparent; animation: mk-hot 1.8s ease-in-out infinite; }
+@keyframes mk-hot { 0%, 100% { box-shadow: 0 0 0 0 rgb(52 211 153 / 0); } 50% { box-shadow: 0 0 0 4px rgb(52 211 153 / 0.55); } }
+
+/* SmartScreen всегда синий — как в Windows, в любой теме сайта. */
+.mk-ss { padding: 14px 14px 12px; background: #0b5cad; color: #fff; box-shadow: 0 16px 34px -18px rgb(0 0 0 / 0.6); }
+.mk-ss > b { display: block; font-size: 14px; font-weight: 600; line-height: 1.25; }
+.mk-ss p { margin: 6px 0 8px; color: rgb(255 255 255 / 0.82); font-size: 11.5px; line-height: 1.4; }
+.mk-link { display: inline-flex; align-items: center; gap: 6px; padding: 2px 6px; margin-left: -6px; border-radius: 6px; text-decoration: underline; font-weight: 600; animation: mk-hot 1.8s ease-in-out infinite; }
+.mk-ss-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin-top: 12px; }
+.mk-ss-btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid rgb(255 255 255 / 0.7); color: #fff; font-size: 11.5px; white-space: nowrap; }
+.mk-ss-btn.hot { background: rgb(255 255 255 / 0.12); animation: mk-hot 1.8s ease-in-out 0.9s infinite; }
+.mk-ss i { flex: none; display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: #34d399; color: #06281c; font-size: 10px; font-weight: 800; font-style: normal; }
+
+@media (max-width: 720px) {
+  .dlg-step, .dlg-step:last-child { grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 14px; }
+  .dlg-step .mk { grid-column: 1 / -1; }
+  .dlg-n { width: 32px; height: 32px; border-radius: 10px; }
+  .dlg-tabs { width: 100%; }
+  .dlg-tabs button { flex: 1 1 auto; padding: 0 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.dlg[open], dialog.dlg[open]::backdrop, .mk-chip.hot, .mk-link, .mk-ss-btn.hot { animation: none; }
+  .dl-help:hover, .dlg-x:hover { transform: none; }
+}

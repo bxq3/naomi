@@ -152,11 +152,13 @@ void main(){
   }
 
   const topo = (() => {
-    const base = $('#topo');
+    let base = $('#topo');
     if (!base || !base.getContext) return { paint() {} };
     const live = reduce() ? null : liveTopo(base);
     if (live) return live;
     if (typeof Path2D === 'undefined') return { paint() {} };
+    // Программный рендер: WebGL уже занял этот canvas, 2D на нём не получить — берём чистую копию.
+    if (!base.getContext('2d')) { const c = base.cloneNode(false); base.replaceWith(c); base = c; }
     let geo = null;
 
     function build(w, h) {
@@ -200,6 +202,7 @@ void main(){
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       cv.width = Math.round(geo.w * dpr); cv.height = Math.round(geo.h * dpr);
       const g = cv.getContext('2d');
+      if (!g) return;
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
       g.clearRect(0, 0, geo.w, geo.h);
       g.lineWidth = 0.9; g.strokeStyle = `rgba(${ink}, ${aMin})`; g.stroke(geo.minor);
@@ -668,4 +671,90 @@ void main(){
 
   /* ---------- Мелочи ---------- */
   $$('[data-year]').forEach((el) => { el.textContent = String(new Date().getFullYear()); });
+})();
+
+/* ---------- Подсказка «браузер или Windows ругаются»: свои шаги под каждый браузер.
+   Открывается сама после нажатия «Скачать» (скачивание при этом идёт как обычно) и по кнопке «Как скачать». ---------- */
+(() => {
+  'use strict';
+  const dlg = document.getElementById('dl-guide');
+  if (!dlg) return;
+  const ua = navigator.userAgent || '';
+  const detect = () => (/YaBrowser|YaSearchBrowser/i.test(ua) ? 'yandex'
+    : /OPR\/|Opera|OPX\//i.test(ua) ? 'opera'
+    : /Edg(A|iOS)?\//i.test(ua) ? 'edge'
+    : /Firefox\/|FxiOS/i.test(ua) ? 'firefox'
+    : 'chrome');
+  const k = (s) => '<kbd>' + s + '</kbd>';
+  const OPEN_DL = 'Открой загрузки — значок ⤓ справа вверху или ' + k('Ctrl') + '+' + k('J') + '.';
+  const BR = {
+    chrome: {
+      place: 'Загрузки', warn: 'Файл скачивается редко',
+      steps: [OPEN_DL, 'Рядом с <b>KORTEX-Setup.exe</b> нажми стрелку <b>›</b>, затем <b>«Всё равно скачать»</b>.'],
+      note: 'В некоторых версиях Chrome кнопка называется «Сохранить».',
+      seq: ['›', 'Всё равно скачать'],
+    },
+    yandex: {
+      place: 'Загрузки', warn: 'Файл скачивается редко',
+      steps: [OPEN_DL, 'Под файлом нажми <b>«Скачать»</b> или <b>«Всё равно скачать»</b>.'],
+      note: 'Если Protect пишет, что файл может быть опасен, — это то же предупреждение о редком файле.',
+      seq: ['Скачать'],
+    },
+    edge: {
+      place: 'Скачанные файлы', warn: 'Файл обычно не скачивается',
+      steps: ['В панели загрузок наведи на файл и нажми <b>«…»</b>.', 'Выбери <b>«Сохранить»</b>, затем <b>«Показать больше»</b> → <b>«Всё равно сохранить»</b>.'],
+      note: 'Панель загрузок закрылась — открой её снова: ' + k('Ctrl') + '+' + k('J') + '.',
+      seq: ['…', 'Сохранить', 'Показать больше', 'Всё равно сохранить'],
+    },
+    opera: {
+      place: 'Загрузки', warn: 'Файл скачивается редко',
+      steps: [OPEN_DL, 'Рядом с файлом нажми <b>«Сохранить»</b> или <b>«Всё равно скачать»</b>.'],
+      note: '',
+      seq: ['Сохранить'],
+    },
+    firefox: {
+      place: 'Загрузки', warn: 'Этот файл редко загружают',
+      steps: ['Открой загрузки — стрелка ⤓ на панели или ' + k('Ctrl') + '+' + k('Shift') + '+' + k('Y') + '.', 'Нажми на файл <b>правой кнопкой</b> → <b>«Разрешить загрузку»</b>.'],
+      note: '',
+      seq: ['Правая кнопка', 'Разрешить загрузку'],
+    },
+  };
+  const mine = detect();
+  let cur = mine;
+  const $ = (s) => dlg.querySelector(s);
+  const tabs = Array.from(dlg.querySelectorAll('[data-br]'));
+  tabs.forEach((b) => b.classList.toggle('mine', b.dataset.br === mine));
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const render = () => {
+    const b = BR[cur];
+    tabs.forEach((t) => { const on = t.dataset.br === cur; t.setAttribute('aria-selected', on ? 'true' : 'false'); t.tabIndex = on ? 0 : -1; });
+    $('[data-br-steps]').innerHTML = b.steps.map((s) => '<li>' + s + '</li>').join('');
+    $('[data-br-note]').innerHTML = b.note;
+    $('[data-br-place]').textContent = b.place;
+    $('[data-br-warn]').textContent = b.warn;
+    $('[data-br-seq]').innerHTML = b.seq.map((s, i) => '<span class="mk-chip' + (i === b.seq.length - 1 ? ' hot' : '') + '">' + esc(s) + '</span>').join('<i>→</i>');
+  };
+  render();
+  const open = () => {
+    if (dlg.open) return;
+    render();
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  };
+  const close = () => { if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open'); };
+  tabs.forEach((t) => t.addEventListener('click', () => { cur = t.dataset.br; render(); }));
+  // Стрелки влево/вправо по вкладкам браузеров.
+  dlg.querySelector('.dlg-tabs').addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const i = tabs.findIndex((t) => t.dataset.br === cur);
+    const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+    cur = n.dataset.br; render(); n.focus(); e.preventDefault();
+  });
+  dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('[data-dlg-close]')) close(); });
+  let shown = false; // сама подсказка всплывает только после первого скачивания, дальше — по кнопке
+  document.addEventListener('click', (e) => {
+    const t = e.target instanceof Element ? e.target : null;
+    if (!t) return;
+    if (t.closest('[data-dl-help]')) { e.preventDefault(); open(); return; }
+    if (!shown && t.closest('a[href*="KORTEX-Setup.exe"]')) { shown = true; setTimeout(open, 900); }
+  });
 })();

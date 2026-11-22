@@ -133,6 +133,7 @@
           <a class="btn btn-ghost btn-lg" href="#how">Как это работает<svg class="ic"><use href="#i-arrow"/></svg></a>
         </div>
         <p class="dl-meta" data-reveal style="--d:300ms"><span data-ver-meta>Последняя версия · Windows 10 и 11, 64-бит</span></p>
+        <p class="dl-help-row" data-reveal style="--d:330ms"><button type="button" class="dl-help" data-dl-help><svg class="ic"><use href="#i-shield"/></svg>Браузер или Windows ругаются? Как скачать</button></p>
         <p class="servers" data-reveal style="--d:360ms">Для серверов <b>GTA5RP</b><i></i><b>Majestic RP</b><i></i><b>Nova RP</b><i></i>и других на RAGE MP</p>
       </div>
 
@@ -755,8 +756,8 @@
             <div class="faq-a"><p>Сама. Каждые 15 минут KORTEX проверяет обновления, скачивает новую версию фоном и ставит её, когда закроешь программу. Можно обновить и вручную в настройках.</p></div>
           </details>
           <details name="faq">
-            <summary>Windows ругается на установщик<svg class="ic"><use href="#i-chev"/></svg></summary>
-            <div class="faq-a"><p>Если SmartScreen пишет «Windows защитил ваш компьютер», нажми «Подробнее» → «Выполнить в любом случае». Качай установщик только с этого сайта. Права администратора нужны, чтобы менять файлы игры в Program Files.</p></div>
+            <summary>Браузер или Windows ругаются на установщик<svg class="ic"><use href="#i-chev"/></svg></summary>
+            <div class="faq-a"><p>Браузер пишет «скачивается редко», а Windows — «защитила ваш компьютер»: так бывает с любой новой программой без платной цифровой подписи. Это предупреждение о редком файле, а не о вирусе. Качай установщик только с этого сайта — он идёт напрямую со страницы релизов KORTEX на GitHub. Права администратора нужны, чтобы менять файлы игры в Program Files.</p><p><button type="button" class="dl-help" data-dl-help><svg class="ic"><use href="#i-shield"/></svg>Пошагово для твоего браузера</button></p></div>
           </details>
           <details name="faq">
             <summary>Что нужно для работы?<svg class="ic"><use href="#i-chev"/></svg></summary>
@@ -777,6 +778,7 @@
             <a class="btn btn-primary btn-lg" href="https://github.com/kortexgg/launcher/releases/latest/download/KORTEX-Setup.exe"><svg class="ic"><use href="#i-download"/></svg>Скачать для Windows</a>
           </div>
           <p class="dl-meta"><span data-ver-meta>Последняя версия · Windows 10 и 11, 64-бит</span></p>
+          <p class="dl-help-row"><button type="button" class="dl-help" data-dl-help><svg class="ic"><use href="#i-shield"/></svg>Браузер или Windows ругаются? Как скачать</button></p>
         </div>
       </div>
     </section>
@@ -798,6 +800,68 @@
       <p>© <span data-year>2026</span> KORTEX</p>
     </div>
   </footer>
+
+  <!-- ============ Подсказка: браузер или Windows ругаются на установщик ============ -->
+  <dialog class="dlg" id="dl-guide" aria-labelledby="dlg-title">
+    <div class="dlg-card">
+      <button class="dlg-x" type="button" data-dlg-close aria-label="Закрыть"><svg class="ic"><use href="#i-x"/></svg></button>
+      <span class="kicker">Скачивание</span>
+      <h3 id="dlg-title">Если браузер или Windows <span class="metal">предупредят</span></h3>
+      <p class="dlg-lead">KORTEX — новая программа без платной цифровой подписи. Поэтому браузер пишет, что файл <b>«скачивается редко»</b>, а Windows — что <b>«защитила компьютер»</b>. Это предупреждение о редком файле, а не о вирусе: установщик идёт напрямую со страницы релизов KORTEX на GitHub.</p>
+
+      <div class="dlg-tabs" role="tablist" aria-label="Браузер">
+        <button type="button" role="tab" data-br="chrome">Chrome</button>
+        <button type="button" role="tab" data-br="yandex">Яндекс</button>
+        <button type="button" role="tab" data-br="edge">Edge</button>
+        <button type="button" role="tab" data-br="opera">Opera</button>
+        <button type="button" role="tab" data-br="firefox">Firefox</button>
+      </div>
+
+      <ol class="dlg-steps">
+        <li class="dlg-step">
+          <span class="dlg-n">1</span>
+          <div class="dlg-txt">
+            <b>Сохрани файл в браузере</b>
+            <ul data-br-steps></ul>
+            <small data-br-note></small>
+          </div>
+          <div class="mk mk-dl" aria-hidden="true">
+            <div class="mk-top"><span data-br-place>Загрузки</span><svg class="ic"><use href="#i-download"/></svg></div>
+            <div class="mk-row">
+              <span class="mk-exe">EXE</span>
+              <span class="mk-name">KORTEX-Setup.exe<small data-br-warn>Файл скачивается редко</small></span>
+            </div>
+            <div class="mk-seq" data-br-seq></div>
+          </div>
+        </li>
+        <li class="dlg-step">
+          <span class="dlg-n">2</span>
+          <div class="dlg-txt">
+            <b>Запусти установщик</b>
+            <ul>
+              <li>Если появится синее окно <b>«Система Windows защитила ваш компьютер»</b> — нажми <b>«Подробнее»</b>.</li>
+              <li>Внизу появится кнопка <b>«Выполнить в любом случае»</b> — нажми её.</li>
+            </ul>
+          </div>
+          <div class="mk mk-ss" aria-hidden="true">
+            <b>Система Windows защитила ваш компьютер</b>
+            <p>Фильтр SmartScreen предотвратил запуск неопознанного приложения…</p>
+            <span class="mk-link"><i>1</i>Подробнее</span>
+            <div class="mk-ss-foot"><span class="mk-ss-btn hot"><i>2</i>Выполнить в любом случае</span><span class="mk-ss-btn">Не выполнять</span></div>
+          </div>
+        </li>
+        <li class="dlg-step">
+          <span class="dlg-n">3</span>
+          <div class="dlg-txt">
+            <b>Разреши установку</b>
+            <ul><li>В окне «Разрешить этому приложению вносить изменения?» нажми <b>«Да»</b> — права нужны, чтобы ставить файлы в папку игры.</li></ul>
+          </div>
+        </li>
+      </ol>
+
+      <p class="dlg-foot">Надписи могут чуть отличаться в разных версиях браузера. Антивирус убрал файл в карантин — восстанови его и добавь в исключения. Не получается — напиши в канал, где взял ссылку.</p>
+    </div>
+  </dialog>
 
   <script src="assets/site.js" defer></script>
 </body>
